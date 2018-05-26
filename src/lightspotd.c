@@ -34,17 +34,20 @@ const unsigned char* config_cmds[] = {
         (const unsigned char *) "\x10\xff\x81\xf1\x01\x00\x00",
         (const unsigned char *) "\x10\xff\x81\xf1\x02\x00\x00",
         (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",
+};
+
+const unsigned char* config2_cmds[] = {
         (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",
         (const unsigned char *) "\x10\x01\x02\x1e\x00\x00\x00",
         (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
         (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",
         (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
         (const unsigned char *) "\x10\x01\x06\x0e\x00\x00\x00",
-        (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",
-        (const unsigned char *) "\x10\xff\x80\x00\x00\x00\x00",
 };
 
 const unsigned char* cmds3[] = {
+        (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",
+        (const unsigned char *) "\x10\xff\x80\x00\x00\x00\x00",
         (const unsigned char *) "\x10\x01\x00\x1e\x00\x00\x00",
         (const unsigned char *) "\x10\x01\x00\x1e\x00\x00\xc0",
         (const unsigned char *) "\x10\x01\x00\x0e\x00\x30\x00",
@@ -215,15 +218,21 @@ void lightspot_init(lightspot_device *dev) {
         res = lightspot_read(dev, buf, 65);
         printhex(buf, res);
     }
+    res = lightspot_read(dev, buf, 65);
+    printhex(buf, res);
 
-    for(int i=0; i<12; i++) {
+    for(int i=0; i<4; i++) {
         fprintf(stderr, "send config_cmd:");
         lightspot_write(dev, config_cmds[i], 7);
         res = lightspot_read(dev, buf, 65);
         printhex(buf, res);
     }
-
-}
+    for(int i=0; i<6; i++) {
+        fprintf(stderr, "send config2_cmd:");
+        lightspot_write(dev, config2_cmds[i], 7);
+        res = lightspot_read(dev, buf, 65);
+        printhex(buf, res);
+    }}
 
 void handle_linux_ev(unsigned char *buf, int len) {
     // TODO: implement me.
