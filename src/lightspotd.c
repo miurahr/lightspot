@@ -19,44 +19,40 @@
 
 #define MAX_STR 255
 
-const unsigned char* reset_cmd =
-        (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00";
-
-const unsigned char* start_cmd =
-        (const unsigned char *) "\x10\xff\x80\x00\x00\x01\x00";
-
 const unsigned char* init_cmds[] = {
-        (const unsigned char *) "\x10\xff\x81\x02\x00\x00\x00",
-        (const unsigned char *) "\x10\xff\x80\x02\x02\x00\x00",
-};
+        (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",/* reset return 1 */
+        (const unsigned char *) "\x10\xff\x80\x00\x00\x01\x00",/* start return 1 */
+        (const unsigned char *) "\x10\xff\x81\x02\x00\x00\x00",/* init return 1 */
+        (const unsigned char *) "\x10\xff\x80\x02\x02\x00\x00",/* init return 2 */
+        (const unsigned char *) "\x10\xff\x00\x1e\x00\x00\x00",/* config */
+        (const unsigned char *) "\x10\xff\x81\xf1\x01\x00\x00",/* config */
+        (const unsigned char *) "\x10\xff\x81\xf1\x02\x00\x00",/* config */
 
-const unsigned char* config_cmds[] = {
-        (const unsigned char *) "\x10\xff\x00\x1e\x00\x00\x00",
-        (const unsigned char *) "\x10\xff\x81\xf1\x01\x00\x00",
-        (const unsigned char *) "\x10\xff\x81\xf1\x02\x00\x00",
+        (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",/* reset return 2 */
+        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",/* config return 2*/
+        (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
+        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",/* config return 1*/
+        (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
+        (const unsigned char *) "\x10\x01\x06\x0e\x00\x00\x00",/* return 20(7+13)byte */
+        (const unsigned char *) "\x10\x01\x06\x0e\x00\x00\x00",/* return 2, 20(7+13)byte */
         (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",
+        (const unsigned char *) "\x10\x01\x05\x0e\x00\x00\x00",/* return 20(7+13)byte */
+        (const unsigned char *) "\x10\x01\x05\x1e\x1b\x31\x00",/* return 20(7+13)byte */
 };
 
-const unsigned char* config2_cmds[] = {
-        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x02\x1e\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
-        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
+const unsigned char* long_cmds[] = {
+        (const unsigned char *) "\x10\x01\x07\x3e\x00\xd8\x33\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00x\00x\00x\00",
+        (const unsigned char *) "\x11\x01\x07\x3e\x00\xdf\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00x\00x\00x\00",
+        (const unsigned char *) "\x11\x01\x07\x3e\x00\xda\x33\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00x\00x\00x\00",
+        (const unsigned char *) "\x11\x01\x07\x3e\x00\xdc\x33\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00x\00x\00x\00",
+        (const unsigned char *) "\x10\x01\x08\x1e\x00\x00\x00",
+        (const unsigned char *) "\x10\x01\x09\x2e\x08\x00\x00\x00\x00\x00\x00\x00\x00\x07\x00\x00\x00\x00\x00\x00",
+        (const unsigned char *) "\x10\x01\x09\x2e\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
+        (const unsigned char *) "\x10\x01\x09\x2e\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
+        (const unsigned char *) "\x10\x01\x0a\x1e\x14\x00\x00",
         (const unsigned char *) "\x10\x01\x06\x0e\x00\x00\x00",
-};
-
-const unsigned char* cmds3[] = {
+        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",
         (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",
-        (const unsigned char *) "\x10\xff\x80\x00\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x00\x1e\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x00\x1e\x00\x00\xc0",
-        (const unsigned char *) "\x10\x01\x00\x0e\x00\x30\x00",
-
-
-
-        (const unsigned char *) "\x10\x01\x00\x0e\x1d\x4b\x00",
-        (const unsigned char *) "\x10\x01\x00\x0e\x00\x10\x00",
 
         (const unsigned char *) "\x10\x01\x00\x0e\x00\x01\x00",
         (const unsigned char *) "\x10\x01\x01\x0e\x00\x00\x00",
@@ -108,22 +104,30 @@ hid_device *lightspot_device_connect() {
     return handle;
 }
 
-
-void lightspot_init(hid_device *dev) {
+void lightspot_init_reset(hid_device *dev) {
     int res;
     unsigned char buf[65];
 
-    fprintf(stderr, "send reset_cmd:");
-    hid_write(dev, reset_cmd, 7);
+    hid_write(dev, init_cmds[0], 7);
     res = hid_read(dev, buf, 65);
     printhex(buf, res);
+}
+
+void lightspot_init_start(hid_device *dev) {
+    int res;
+    unsigned char buf[65];
 
     fprintf(stderr, "send start_cmd:");
-    hid_write(dev, start_cmd, 7);
+    hid_write(dev, init_cmds[1], 7);
     res = hid_read(dev, buf, 65);
     printhex(buf, res);
+}
 
-    for (int i=0; i<2; i++) {
+void lightspot_init_init(hid_device *dev) {
+    int res;
+    unsigned char buf[65];
+
+    for (int i=2; i<4; i++) {
         fprintf(stderr, "send init_cmd:");
         hid_write(dev, init_cmds[i], 7);
         res = hid_read(dev, buf, 65);
@@ -131,19 +135,40 @@ void lightspot_init(hid_device *dev) {
     }
     res = hid_read(dev, buf, 65);
     printhex(buf, res);
+}
 
-    for(int i=0; i<4; i++) {
+void lightspot_init_config(hid_device *dev) {
+    int res;
+    unsigned char buf[65];
+
+    for(int i=4; i<8; i++) {
         fprintf(stderr, "send config_cmd:");
-        hid_write(dev, config_cmds[i], 7);
+        hid_write(dev, init_cmds[i], 7);
         res = hid_read(dev, buf, 65);
         printhex(buf, res);
     }
-    for(int i=0; i<6; i++) {
+    for(int i=8; i<12; i++) {
         fprintf(stderr, "send config2_cmd:");
-        hid_write(dev, config2_cmds[i], 7);
+        hid_write(dev, init_cmds[i], 7);
         res = hid_read(dev, buf, 65);
         printhex(buf, res);
     }
+    res = hid_read(dev, buf, 65);
+    printhex(buf, res);
+    for(int i=12; i<13; i++) {
+        fprintf(stderr, "send config3_cmd:");
+        hid_write(dev, init_cmds[i], 7);
+        res = hid_read(dev, buf, 65);
+        printhex(buf, res);
+    }
+
+}
+
+void lightspot_init(hid_device *dev) {
+    lightspot_init_reset(dev);
+    lightspot_init_start(dev);
+    lightspot_init_init(dev);
+    lightspot_init_config(dev);
 }
 
 void handle_linux_ev(unsigned char *buf, int len) {
