@@ -18,44 +18,40 @@
 
 #include "libusb.h"
 
-const unsigned char* reset_cmd =
-        (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00";
-
-const unsigned char* start_cmd =
-        (const unsigned char *) "\x10\xff\x80\x00\x00\x01\x00";
-
 const unsigned char* init_cmds[] = {
-        (const unsigned char *) "\x10\xff\x81\x02\x00\x00\x00",
-        (const unsigned char *) "\x10\xff\x80\x02\x02\x00\x00",
-};
+        (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",/* reset return 1*/
+        (const unsigned char *) "\x10\xff\x80\x00\x00\x01\x00",/* start return 1 */
+        (const unsigned char *) "\x10\xff\x81\x02\x00\x00\x00",/* init return 1 */
+        (const unsigned char *) "\x10\xff\x80\x02\x02\x00\x00",/* init return 2 */
+        (const unsigned char *) "\x10\xff\x00\x1e\x00\x00\x00",/* config */
+        (const unsigned char *) "\x10\xff\x81\xf1\x01\x00\x00",/* config */
+        (const unsigned char *) "\x10\xff\x81\xf1\x02\x00\x00",/* config */
 
-const unsigned char* config_cmds[] = {
-        (const unsigned char *) "\x10\xff\x00\x1e\x00\x00\x00",
-        (const unsigned char *) "\x10\xff\x81\xf1\x01\x00\x00",
-        (const unsigned char *) "\x10\xff\x81\xf1\x02\x00\x00",
+        (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",/* reset return 2 */
+        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",/* config return 2*/
+        (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
+        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",/* config return 1*/
+        (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
+        (const unsigned char *) "\x10\x01\x06\x0e\x00\x00\x00",/* return 20(7+13)byte */
+        (const unsigned char *) "\x10\x01\x06\x0e\x00\x00\x00",/* return 2, 20(7+13)byte */
         (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",
+        (const unsigned char *) "\x10\x01\x05\x0e\x00\x00\x00",/* return 20(7+13)byte */
+        (const unsigned char *) "\x10\x01\x05\x1e\x1b\x31\x00",/* return 20(7+13)byte */
 };
 
-const unsigned char* config2_cmds[] = {
-        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x02\x1e\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
-        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x02\x1e\x01\x00\x00",
+const unsigned char* long_cmds[] = {
+        (const unsigned char *) "\x10\x01\x07\x3e\x00\xd8\x33\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00x\00x\00x\00",
+        (const unsigned char *) "\x11\x01\x07\x3e\x00\xdf\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00x\00x\00x\00",
+        (const unsigned char *) "\x11\x01\x07\x3e\x00\xda\x33\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00x\00x\00x\00",
+        (const unsigned char *) "\x11\x01\x07\x3e\x00\xdc\x33\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00x\00x\00x\00",
+        (const unsigned char *) "\x10\x01\x08\x1e\x00\x00\x00",
+        (const unsigned char *) "\x11\x01\x09\x2e\x08\x00\x00\x00\x00\x00\x00\x00\x00\x07\x00\x00\x00\x00\x00\x00",
+        (const unsigned char *) "\x11\x01\x09\x2e\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
+        (const unsigned char *) "\x11\x01\x09\x2e\x04\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00",
+        (const unsigned char *) "\x10\x01\x0a\x1e\x14\x00\x00",
         (const unsigned char *) "\x10\x01\x06\x0e\x00\x00\x00",
-};
-
-const unsigned char* cmds3[] = {
+        (const unsigned char *) "\x10\x01\x02\x0e\x00\x00\x00",
         (const unsigned char *) "\x10\xff\x81\x00\x00\x00\x00",
-        (const unsigned char *) "\x10\xff\x80\x00\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x00\x1e\x00\x00\x00",
-        (const unsigned char *) "\x10\x01\x00\x1e\x00\x00\xc0",
-        (const unsigned char *) "\x10\x01\x00\x0e\x00\x30\x00",
-
-
-
-        (const unsigned char *) "\x10\x01\x00\x0e\x1d\x4b\x00",
-        (const unsigned char *) "\x10\x01\x00\x0e\x00\x10\x00",
 
         (const unsigned char *) "\x10\x01\x00\x0e\x00\x01\x00",
         (const unsigned char *) "\x10\x01\x01\x0e\x00\x00\x00",
@@ -63,6 +59,10 @@ const unsigned char* cmds3[] = {
 
 const unsigned char* cmd_poll =
         (const unsigned char *) "\x10\x01\x01\x1e\x00\x00\x00";
+// poll cmd has counter
+// "\x10\x01\x01\x1e\x00\x00\x00";
+// "\x10\x01\x01\x1e\x01\x00\x00";
+// "\x10\x01\x01\x1e\x02\x00\x00";
 
 void printhex(unsigned char *buf, int len) {
     int i;
@@ -76,6 +76,7 @@ void printhex(unsigned char *buf, int len) {
 typedef struct lightspot_device_ {
     libusb_device *device;
     libusb_device_handle *handle;
+    int interval;
 } lightspot_device;
 
 static lightspot_device *new_device() {
@@ -126,6 +127,7 @@ lightspot_device *lightspot_find_device(libusb_context *ctx) {
                     fprintf(stderr, "Found device.\n");
                     dev = new_device();
                     dev->device = list[i];
+                    dev->interval = epdesc->bInterval;
                     res=1;
                 }
             }
@@ -177,10 +179,10 @@ int lightspot_write(lightspot_device *dev, const unsigned char *data, unsigned i
                                   LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT,
                                   0x09/*HID Set_Report*/,
                                   (2/*HID output*/ << 8) | report_number,
-                                  2,
+                                  2/* wIndex */,
                                   (unsigned char*)data,
                                   (uint16_t) length,
-                                  1000/*timeout millis*/);
+                                  dev->interval);
     if (res < 0)
         return -1;
 
@@ -192,9 +194,12 @@ int lightspot_write(lightspot_device *dev, const unsigned char *data, unsigned i
 
 int lightspot_read(lightspot_device *dev, unsigned char *buf, int length)
 {
-	int actual;
+	int rc,actual;
 
-	libusb_interrupt_transfer(dev->handle, 0x83, buf, length, &actual, 5000);
+	rc = libusb_interrupt_transfer(dev->handle, 0x83, buf, length, &actual, dev->interval);
+	if (rc == LIBUSB_ERROR_TIMEOUT)
+        return 0;
+
 	return actual;
 }
 
@@ -203,16 +208,16 @@ void lightspot_init(lightspot_device *dev) {
     unsigned char buf[65];
 
     fprintf(stderr, "send reset_cmd:");
-    lightspot_write(dev, reset_cmd, 7);
+    lightspot_write(dev, init_cmds[0], 7);
     res = lightspot_read(dev, buf, 65);
     printhex(buf, res);
 
     fprintf(stderr, "send start_cmd:");
-    lightspot_write(dev, start_cmd, 7);
+    lightspot_write(dev, init_cmds[1], 7);
     res = lightspot_read(dev, buf, 65);
     printhex(buf, res);
 
-    for (int i=0; i<2; i++) {
+    for (int i=2; i<4; i++) {
         fprintf(stderr, "send init_cmd:");
         lightspot_write(dev, init_cmds[i], 7);
         res = lightspot_read(dev, buf, 65);
@@ -221,15 +226,15 @@ void lightspot_init(lightspot_device *dev) {
     res = lightspot_read(dev, buf, 65);
     printhex(buf, res);
 
-    for(int i=0; i<4; i++) {
+    for(int i=4; i<8; i++) {
         fprintf(stderr, "send config_cmd:");
-        lightspot_write(dev, config_cmds[i], 7);
+        lightspot_write(dev, init_cmds[i], 7);
         res = lightspot_read(dev, buf, 65);
         printhex(buf, res);
     }
-    for(int i=0; i<6; i++) {
+    for(int i=8; i<12; i++) {
         fprintf(stderr, "send config2_cmd:");
-        lightspot_write(dev, config2_cmds[i], 7);
+        lightspot_write(dev, init_cmds[i], 7);
         res = lightspot_read(dev, buf, 65);
         printhex(buf, res);
     }}
@@ -261,7 +266,6 @@ int main(int argc, char *argv[]) {
             res =lightspot_device_connect(dev);
             if (res== 0) {
                 lightspot_init(dev);
-                /*
                 for (uint16_t s = 0; s < 256; s++) {
                     unsigned char cmd[7];
                     memcpy((void *)cmd_poll, cmd, sizeof(cmd));
@@ -276,7 +280,6 @@ int main(int argc, char *argv[]) {
                     }
                     usleep(20000);
                 }
-                */
                 lightspot_device_disconnect(dev);
                 break;
             } else {
